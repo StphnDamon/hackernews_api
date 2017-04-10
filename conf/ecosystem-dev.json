@@ -1,0 +1,14 @@
+{
+    "apps" : [
+        {
+            "name": "server",
+            "script": "server.js",
+            "instances": 1,
+            "watch_options": {
+                "followSymlinks": false
+            },
+            "watch": true,
+            "autorestart": true
+        }
+    ]
+}
