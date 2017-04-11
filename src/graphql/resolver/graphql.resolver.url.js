@@ -12,7 +12,7 @@ function GraphqlResolverUrl () {
 
     this.Mutation = {
         addUrl: async (root, args, req) => {
-            var url = await this.addUrl(root, args, req);
+            var url = await this.addUrl(request, root, args, req);
 
             return url;
         },
@@ -39,7 +39,7 @@ GraphqlResolverUrl.prototype.resolveUrls = (root, args, req) => {
     });
 };
 
-GraphqlResolverUrl.prototype.addUrl = (root, args, req) => {
+GraphqlResolverUrl.prototype.addUrl = (request, root, args, req) => {
     return new Promise((resolve, reject) => {
         let urlModel = req.db.model('url');
         let link = args.url;
@@ -48,11 +48,14 @@ GraphqlResolverUrl.prototype.addUrl = (root, args, req) => {
             link = 'http://' + link;
         }
 
-        GraphqlResolverUrl.prototype.request(link, (err, response, body) => {
+        // fetch the page to retrieve the title
+        request(link, (err, response, body) => {
             if (err) return reject(new Error(err));
 
-            let match = GraphqlResolverUrl.prototype.titleRegex.exec(body);
+            let titleRegex = /(<\s*title[^>]*>(.+?)<\s*\/\s*title)>/gi;
+            let match = titleRegex.exec(body);
 
+            // if the page has a title
             if (match) {
                 let newUrl = urlModel({
                     url: link,
@@ -73,6 +76,7 @@ GraphqlResolverUrl.prototype.addUrl = (root, args, req) => {
 
 GraphqlResolverUrl.prototype.voteUp = (root, args, req) => {
     return new Promise((resolve, reject) => {
+        // update vote.total for global score
         req.db.model('url').update({_id: args._id}, {$inc: {'vote.up': 1, 'vote.total': 1}}, (err, result) => {
             if (err) return reject(new Error(err));
 
@@ -83,6 +87,7 @@ GraphqlResolverUrl.prototype.voteUp = (root, args, req) => {
 
 GraphqlResolverUrl.prototype.voteDown = (root, args, req) => {
     return new Promise((resolve, reject) => {
+        // update vote.total for global score
         req.db.model('url').update({_id: args._id}, {$inc: {'vote.down': 1, 'vote.total': -1}}, (err, result) => {
             if (err) return reject(new Error(err));
 
@@ -90,8 +95,5 @@ GraphqlResolverUrl.prototype.voteDown = (root, args, req) => {
         });
     });
 };
-
-GraphqlResolverUrl.prototype.request = request;
-GraphqlResolverUrl.prototype.titleRegex = /(<\s*title[^>]*>(.+?)<\s*\/\s*title)>/gi;
 
 module.exports = GraphqlResolverUrl;

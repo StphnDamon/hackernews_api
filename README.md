@@ -1,15 +1,26 @@
-Hacker News
-====================
+# Hacker News
 
-===== docker part
-docker build -t hackernews/api .
-docker run -d -p 49160:8081 -v $(pwd):/app --name hackernews_api hackernews/api
-docker exec -it hackernews_api /bin/bash
+## Install
+---
+You need to have MongoDB pre-installed and, if needed, change the conf in `conf/config.js`
 
-===== test unit part
-./node_modules/.bin/istanbul cover node_modules/.bin/_mocha tests src
+If you don't have PM2 installed, please run `npm install -g pm2`
 
+By defaut, the server runs on port 8081 but you can change it in `conf/config.js`
 
+## Run server
+---
+Start server with PM2 choosing the "right" ecosystem (in dev, server restart for each file modification) :
+```npm start```
+See logs with `pm2 logs server`
 
-* 1h30 pour docker
-* 2h pour lire la documentation de GraphQL
+Start server without PM2 :
+```node server```
+
+## Run tests
+---
+With code coverage
+```/node_modules/.bin/istanbul cover node_modules/.bin/_mocha tests/**/*.js src```
+
+Without code coverage
+```/node_modules/.bin/_mocha tests/**/*.js```

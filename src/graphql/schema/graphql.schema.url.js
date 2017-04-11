@@ -31,5 +31,5 @@ type Mutation {
 `;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
-logger.util(schema._typeMap.Url)
+
 module.exports = schema;

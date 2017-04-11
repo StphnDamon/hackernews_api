@@ -1,6 +1,9 @@
 module.exports = {
-    server : {
-        port: 8081
+    cors: {
+        origin: 'http://localhost:3000'
+    },
+    graphql: {
+        graphiql: true
     },
     logger: {
         appenders: [
@@ -23,7 +26,14 @@ module.exports = {
             }
         ],
         replaceConsole: true
+    },
+    mongoose: {
+        connection: {
+            db: 'hackernews',
+            host: 'mongodb://localhost'
+        }
+    },
+    server : {
+        port: 8081
     }
 };
-
-//module.exports = config;

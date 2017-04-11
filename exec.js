@@ -18,7 +18,7 @@ switch (process.env.ENVIRONMENT) {
         break;
 }
 
-var child = exec('pm2-docker start ./conf/ecosystem-' + ecosystemEnv + '.json', function (error, stdout, stderr) {
+var child = exec('pm2 start ./conf/ecosystem-' + ecosystemEnv + '.json', function (error, stdout, stderr) {
     util.print('stdout: ' + stdout);
     util.print('stderr: ' + stderr);
 
